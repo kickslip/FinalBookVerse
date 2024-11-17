@@ -1,0 +1,152 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
+  directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+model User {
+  id            String    @id @default(uuid())
+  username      String    @unique
+  firstName     String
+  lastName      String
+  displayName   String
+  email         String    @unique
+  avatarUrl     String?
+  passwordHash  String
+  vatNumber     String?
+  phoneNumber   Int
+  streetAddress String?
+  addressLine2  String?
+  suburb        String?
+  townCity      String?
+  postcode      String
+  country       String
+  salesRep      String?
+  companyName   String?
+  agreeTerms    Boolean   @default(false)
+  role          UserRole  @default(USER)
+  cart          Cart?
+  orders        Order[]
+  books         Book[]
+  sessions      Session[]
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@map("users")
+}
+
+enum UserRole {
+  USER
+  CUSTOMER
+  ADMIN
+}
+
+model Session {
+  id          String   @id
+  userId      String
+  expiresAt   DateTime
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model Book {
+  id          String      @id @default(uuid())
+  title       String
+  author      String
+  publishYear Int?
+  price       Int         // Stored in cents
+  available   Boolean     @default(true)
+  description String?
+  mediaUrl    String?
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cartItems   CartItem[]
+  orderItems  OrderItem[]
+
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@map("books")
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  userId    String     @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  cartItems CartItem[]
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  @@map("carts")
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  cartId    String
+  bookId    String
+  quantity  Int      @default(1)
+  cart      Cart     @relation(fields: [cartId], references: [id], onDelete: Cascade)
+  book      Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@map("cart_items")
+}
+
+model Order {
+  id                  String       @id @default(uuid())
+  userId              String
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  captivityBranch     String
+  methodOfCollection  String
+  salesRep           String?
+  referenceNumber    String?
+  firstName          String
+  lastName           String
+  companyName        String
+  countryRegion      String
+  streetAddress      String
+  apartmentSuite     String?
+  townCity           String
+  province           String
+  postcode           String
+  phone              String
+  email              String
+  orderNotes         String?
+  orderItems         OrderItem[]
+  status             OrderStatus   @default(PENDING)
+  totalAmount        Float
+  agreeTerms         Boolean       @default(false)
+  receiveEmailReviews Boolean?     @default(false)
+
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  PENDING
+  SHIPPED
+  DELIVERED
+  COMPLETED
+  CANCELLED
+}
+
+model OrderItem {
+  id          String   @id @default(uuid())
+  orderId     String
+  bookId      String
+  quantity    Int      @default(1)
+  price       Float
+  order       Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  book        Book     @relation(fields: [bookId], references: [id], onDelete: Cascade)
+
+  @@map("order_items")
+}
