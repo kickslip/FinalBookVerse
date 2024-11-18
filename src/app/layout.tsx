@@ -22,19 +22,19 @@ export default function RootLayout({
 
       <body>
         <Providers>
+        <SessionProvider>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <BookstoreThemeWrapper>
               <NavbarStyled>
               {/* children={undefined} */}
               </NavbarStyled>
               <main className="max-w-7xl mx-auto p-6">
-              <SessionProvider>
                 {children}
-                </SessionProvider>
               </main>
               <Toaster />
             </BookstoreThemeWrapper>
           </ThemeProvider>
+          </SessionProvider>
         </Providers>
       </body>
     </html>
