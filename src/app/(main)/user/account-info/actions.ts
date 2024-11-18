@@ -98,6 +98,10 @@ export async function deleteAccount(userId: string) {
 }
 
 export async function getUserProfile(userId: string) {
+    if (!userId) {
+        return { error: "Invalid user ID" };
+    }
+
     try {
         const user = await prisma.user.findUnique({
             where: { id: userId },
@@ -107,7 +111,7 @@ export async function getUserProfile(userId: string) {
                 displayName: true,
                 createdAt: true,
                 updatedAt: true,
-            }
+            },
         });
 
         if (!user) {
@@ -116,8 +120,7 @@ export async function getUserProfile(userId: string) {
 
         return { success: true, user };
     } catch (error) {
-        return {
-            error: "Failed to fetch user profile"
-        };
+        console.error("Error fetching user profile:", error);
+        return { error: "Failed to fetch user profile" };
     }
 }
