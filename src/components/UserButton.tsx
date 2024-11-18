@@ -15,7 +15,7 @@ import {
 } from "./ui/dropdown-menu";
 import UserAvatar from "./UserAvatar";
 import Link from "next/link";
-import { Check, LogOut, Monitor, Moon, Sun, User } from "lucide-react";
+import { Check, LogOut, Monitor, Moon, Sun, User, UserIcon } from "lucide-react";
 import { logout } from "@/app/(auth)/actions";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
@@ -77,12 +77,12 @@ export default function UserButton({ className }: UserButtonProps) {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem asChild>
-          <Link href="/user/account-info" className="cursor-pointer">
-            <User className="mr-2 size-4" />
-            Profile
-          </Link>
-        </DropdownMenuItem>
+            <Link href={`/user/account-info`}>
+            <DropdownMenuItem>
+                <UserIcon className="mr-2 size-4"/>
+                Profile
+            </DropdownMenuItem>
+            </Link>
         <DropdownMenuSub>
           <DropdownMenuSubTrigger>
             <Monitor className="mr-2 size-4" />

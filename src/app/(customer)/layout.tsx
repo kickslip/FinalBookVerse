@@ -1,7 +1,7 @@
 import { validateRequest } from "@/auth";
 import { redirect } from "next/navigation";
 import SessionProvider from "./SessionProvider";
-import Navbar from "@/app/(main)/Navbar.tsx";
+import Navbar from "@/app/(main)/Navbar";
 import { Toaster } from "@/components/ui/toast";
 
 export const dynamic = "force-dynamic";

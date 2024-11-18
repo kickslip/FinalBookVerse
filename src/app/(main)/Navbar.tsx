@@ -10,13 +10,10 @@ export default function Navbar() {
   return (
     <NavbarStyled>
       <Link href="/" className="text-2xl font-serif font-bold text-primary">
-        BookVerse<SiGitbook />
+        <span>BookVerse</span><SiGitbook />
       </Link>
       <div className="flex items-center gap-6">
-        <SearchField searchParams={{
-          search: undefined,
-          page: undefined
-        }} />
+        <SearchField />
         <UserButton className="ml-4" />
       </div>
     </NavbarStyled>
