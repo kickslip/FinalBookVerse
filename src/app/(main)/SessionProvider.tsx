@@ -3,6 +3,7 @@
 
 import { Session, User } from "lucia";
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 interface SessionContext {
   user: User & {
@@ -20,6 +21,7 @@ export default function SessionProvider({
 }: React.PropsWithChildren<{ 
   initialSession?: { user: SessionContext['user']; session: Session } 
 }>) {
+  const router = useRouter();
   const [status, setStatus] = useState<SessionContext['status']>(
     initialSession ? "authenticated" : "loading"
   );
@@ -30,13 +32,10 @@ export default function SessionProvider({
   );
 
   useEffect(() => {
-    // If we have initial session data, we can skip the loading state
     if (initialSession) return;
 
-    // You might want to fetch the session data here if not provided
     const checkSession = async () => {
       try {
-        // Replace this with your actual session checking logic
         const response = await fetch('/api/auth/session');
         const data = await response.json();
         
@@ -49,15 +48,17 @@ export default function SessionProvider({
           setStatus("authenticated");
         } else {
           setStatus("unauthenticated");
+          router.push('/login'); // Redirect to login if no session
         }
       } catch (error) {
         console.error('Failed to check session:', error);
         setStatus("unauthenticated");
+        router.push('/login');
       }
     };
 
     checkSession();
-  }, [initialSession]);
+  }, [initialSession, router]);
 
   return (
     <SessionContext.Provider 

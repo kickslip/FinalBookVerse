@@ -13,24 +13,24 @@ import {
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import UserAvatar from "./UserAvatar";
 import Link from "next/link";
 import { Check, LogOut, Monitor, Moon, Sun, User, UserIcon } from "lucide-react";
 import { logout } from "@/app/(auth)/actions";
 import { cn } from "@/lib/utils";
 import { useTheme } from "next-themes";
-import { useQueryClient } from "@tanstack/react-query";
+import { QueryClient, useQueryClient } from "@tanstack/react-query";
 import { Button } from "./ui/button";
+import UserAvatar from "./UserAvatar";
 
 interface UserButtonProps {
   className?: string;
 }
-
 export default function UserButton({ className }: UserButtonProps) {
   const { user, status } = useSession();
   const { theme, setTheme } = useTheme();
   const queryClient = useQueryClient();
 
+  // Show loading state
   if (status === "loading") {
     return (
       <Button variant="ghost" size="icon" className={cn("rounded-full", className)}>
@@ -39,7 +39,8 @@ export default function UserButton({ className }: UserButtonProps) {
     );
   }
 
-  if (!user) {
+  // Show login button if not authenticated
+  if (status === "unauthenticated" || !user) {
     return (
       <Link href="/login">
         <Button variant="ghost" size="icon" className={cn("rounded-full", className)}>
@@ -49,9 +50,10 @@ export default function UserButton({ className }: UserButtonProps) {
     );
   }
 
+ 
   const handleLogout = async () => {
     try {
-      await queryClient.clear();
+      await QueryClient.clear();
       await logout();
     } catch (error) {
       console.error("Logout failed:", error);
