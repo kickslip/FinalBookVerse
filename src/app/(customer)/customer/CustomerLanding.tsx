@@ -199,6 +199,11 @@ const CustomerLanding = () => {
     0
   ) || 0;
 
+  // Format price in Rands
+  const formatPrice = (priceInCents: number) => {
+    return `R${(priceInCents / 100).toFixed(2)}`;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <main className="container mx-auto p-4">
@@ -272,7 +277,7 @@ const CustomerLanding = () => {
                   <CardFooter className="mt-auto">
                     <div className="w-full flex items-center justify-between">
                       <span className="text-lg font-semibold">
-                        ${(book.price / 100).toFixed(2)}
+                        {formatPrice(book.price)}
                       </span>
                       <Button
                         onClick={() => addToCart(book.id)}

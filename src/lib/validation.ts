@@ -48,8 +48,7 @@ export const bookSchema = z.object({
       .min(1800, "Year must be 1800 or later"),
       //.max(new Date().getFullYear() + 10, "Year cannot be too far in the future"),
     price: z.number()
-      .int()
-      .multipleOf(0.01, "Price must have at most 2 decimal places"),
+      .int(),
     mediaUrl: z.string().optional(),
   });
   

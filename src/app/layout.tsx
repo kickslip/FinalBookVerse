@@ -5,6 +5,7 @@ import { BookstoreThemeWrapper, NavbarStyled } from "@/components/BookstoreTheme
 import { Toaster } from "@/components/ui/toast/toaster";
 import Providers from "./providers";
 import SessionProvider from "./(main)/SessionProvider";
+import Footer from "@/components/Footer/Footer";
 
 export const metadata: Metadata = {
   title: "BookVerse",
@@ -31,6 +32,7 @@ export default function RootLayout({
               <main className="max-w-7xl mx-auto p-6">
                 {children}
               </main>
+              <Footer />
               <Toaster />
             </BookstoreThemeWrapper>
           </ThemeProvider>
